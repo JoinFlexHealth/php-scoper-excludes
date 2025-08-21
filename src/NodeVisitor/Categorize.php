@@ -55,26 +55,30 @@ final class Categorize extends NodeVisitorAbstract
     {
         if ($node instanceof Node\Stmt\Class_) {
             $this->addClassNames($node);
-            return;
+            return null;
         }
         if ($node instanceof Node\Stmt\Interface_) {
             $this->addInterfaceNames($node);
-            return;
+            return null;
         }
         if ($node instanceof Node\Stmt\Function_) {
             $this->addFunctionNames($node);
-            return;
+            return null;
         }
         if ($node instanceof Node\Stmt\Trait_) {
             $this->addTraitNames($node);
-            return;
+            return null;
         }
         if ($node instanceof Node\Stmt\Const_) {
             $this->addConstantNames($node);
-            return;
+            return null;
         }
         
-        if ($node instanceof Node\Stmt\Expression) {
+        if ($node instanceof Node\Stmt\Expression
+            && $node->expr instanceof Node\Expr\FuncCall
+            && $node->expr->name instanceof Node\Name
+            && $node->expr->name->toString() === 'define'
+        ) {
             $this->addDefineConstantNames($node);
         }
         

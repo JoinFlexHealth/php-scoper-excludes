@@ -28,11 +28,8 @@ final class Filter extends NodeVisitorAbstract
         }
     }
     
-    public function leaveNode(Node $node) :?int
+    public function leaveNode(Node $node)
     {
-        if ( ! $this->isOfInterest($node) && $node instanceof Node\Stmt) {
-            return NodeTraverser::REMOVE_NODE;
-        }
         return null;
     }
     
