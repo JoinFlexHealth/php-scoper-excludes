@@ -182,7 +182,21 @@ final class Categorize extends NodeVisitorAbstract
         }
         
         try {
-            $this->constants[] = (string) $node->expr->args[0]->value->value;
+            $valueNode = $node->expr->args[0]->value;
+            
+            // Handle different types of scalar nodes
+            if ($valueNode instanceof Node\Scalar\String_) {
+                $constantName = $valueNode->value;
+            } elseif ($valueNode instanceof Node\Scalar\Encapsed) {
+                // For interpolated strings, we can't reliably extract a constant name
+                // Skip these cases to avoid warnings
+                return;
+            } else {
+                // For other node types, try to convert to string if possible
+                $constantName = (string) $valueNode;
+            }
+            
+            $this->constants[] = $constantName;
         } catch (Throwable $e) {
             throw new RuntimeException(
                 "define() declaration has no constant name.\n{$e->getMessage()}",
