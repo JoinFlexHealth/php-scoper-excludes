@@ -35,30 +35,30 @@ use const JSON_THROW_ON_ERROR;
  */
 final class ExclusionListGenerator
 {
-    
+
     const STMT_FUNCTION = 'function';
     const STMT_CLASS = 'class';
     const STMT_CONST = 'const';
     const STMT_TRAIT = 'trait';
     const STMT_INTERFACE = 'interface';
-    
+
     private Parser $parser;
     private string $root_dir;
-    
+
     public function __construct(Parser $parser, string $root_dir)
     {
         if ( ! is_dir($root_dir)) {
             throw new InvalidArgumentException("Directory [$root_dir] does not exist.");
         }
-        
+
         if ( ! is_writable($root_dir)) {
             throw new InvalidArgumentException("Directory [$root_dir] is not writable.");
         }
-        
+
         $this->parser = $parser;
         $this->root_dir = $root_dir;
     }
-    
+
     public function dumpAsPhpArray(string $file, bool $include_empty = true) :void
     {
         $this->dump($file, function (array $exludes, string $file_path) {
@@ -68,7 +68,7 @@ final class ExclusionListGenerator
             );
         }, '.php', $include_empty);
     }
-    
+
     public function dumpAsJson(string $file, bool $include_empty = true) :void
     {
         $this->dump($file, function (array $excludes, $file_path) {
@@ -76,7 +76,7 @@ final class ExclusionListGenerator
             return file_put_contents($file_path, $json);
         }, '.json', $include_empty);
     }
-    
+
     /**
      * @param  Closure(array,string):bool  $save_do_disk
      */
@@ -85,37 +85,43 @@ final class ExclusionListGenerator
         if ( ! is_readable($file)) {
             throw new InvalidArgumentException("File [$file] is not readable.");
         }
-        
+
         if ('php' !== pathinfo($file, PATHINFO_EXTENSION)) {
             throw new InvalidArgumentException(
                 "Only PHP files can be processed.\nCant process file [$file]."
             );
         }
-        
+
         $content = file_get_contents($file);
         if (false === $content) {
             throw new RuntimeException("Cant read file contents of file [$file].");
         }
-        
+
         $exclude_list = $this->generateExcludeList($content);
-        
+
         $base_name = pathinfo($file, PATHINFO_FILENAME);
-        
+
+        $cwd = realpath(getcwd());
+        $file_dir = dirname(realpath($file));
+        $relative_dir = str_replace($cwd . DIRECTORY_SEPARATOR, '', $file_dir);
+
+        $path_hash = $relative_dir ? substr(hash('sha1', $relative_dir), 0, 7) : '';
+
         if(!$include_empty){
             $exclude_list = array_filter($exclude_list, fn(array $arr) => count($arr));
         }
-        
+
         foreach ($exclude_list as $type => $excludes) {
-            
-            $path = $this->getFileName($type, $base_name, $file_extension);
+
+            $path = $this->getFileName($type, $path_hash, $base_name, $file_extension);
             $success = $save_do_disk($excludes, $path);
-            
+
             if (false === $success) {
                 throw new RuntimeException("Could not dump contents for file [$base_name].");
             }
         }
     }
-    
+
     /**
      * @return array<string,string[]>
      */
@@ -126,10 +132,10 @@ final class ExclusionListGenerator
         $node_traverser->addVisitor(new NameResolver());
         // The order is important.
         $node_traverser->addVisitor($categorizing_visitor = new Categorize());
-        
+
         $ast = $this->parser->parse($file_contents);
         $node_traverser->traverse($ast);
-        
+
         return [
             self::STMT_CLASS => $categorizing_visitor->classes(),
             self::STMT_INTERFACE => $categorizing_visitor->interfaces(),
@@ -138,11 +144,15 @@ final class ExclusionListGenerator
             self::STMT_CONST => $categorizing_visitor->constants(),
         ];
     }
-    
-    private function getFileName(string $key, string $file_basename, string $extension) :string
+
+    private function getFileName(string $key, string $path_hash, string $file_basename, string $extension) :string
     {
         $file_basename = str_replace('-stubs', '', $file_basename);
         $file_basename = str_replace($extension, '', $file_basename);
+        if ($path_hash) {
+            $file_basename = $path_hash . '-' . $file_basename;
+        }
+
         switch ($key) {
             case self::STMT_FUNCTION:
                 return $this->root_dir."/exclude-$file_basename-functions$extension";
@@ -158,5 +168,5 @@ final class ExclusionListGenerator
                 throw new RuntimeException("Unknown exclude identifier [$key].");
         }
     }
-    
+
 }

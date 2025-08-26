@@ -81,7 +81,7 @@ final class CustomNamespaceTest extends TestCase
     /** @test */
     public function functions_in_the_custom_namespace_are_parsed_correctly()
     {
-        $expected_path = $this->dump_to.'/exclude-wp-cli-functions.php';
+        $expected_path = $this->dump_to.'/exclude-4e5576b-wp-cli-functions.php';
         
         $this->assertFalse(is_file($expected_path));
         
@@ -100,7 +100,7 @@ final class CustomNamespaceTest extends TestCase
     /** @test */
     public function classes_in_the_custom_namespace_are_parsed_correctly()
     {
-        $expected_path = $this->dump_to.'/exclude-wp-cli-classes.php';
+        $expected_path = $this->dump_to.'/exclude-4e5576b-wp-cli-classes.php';
         
         $this->assertFalse(is_file($expected_path));
         
@@ -119,7 +119,7 @@ final class CustomNamespaceTest extends TestCase
     /** @test */
     public function interfaces_are_parsed_correctly()
     {
-        $expected_path = $this->dump_to.'/exclude-wp-cli-interfaces.php';
+        $expected_path = $this->dump_to.'/exclude-4e5576b-wp-cli-interfaces.php';
         
         $this->assertFalse(is_file($expected_path));
         
@@ -137,7 +137,7 @@ final class CustomNamespaceTest extends TestCase
     /** @test */
     public function constants_in_the_custom_namespace_are_parsed_correctly()
     {
-        $expected_path = $this->dump_to.'/exclude-wp-cli-constants.php';
+        $expected_path = $this->dump_to.'/exclude-4e5576b-wp-cli-constants.php';
         
         $this->assertFalse(is_file($expected_path));
         
@@ -158,7 +158,7 @@ final class CustomNamespaceTest extends TestCase
     /** @test */
     public function traits_in_the_custom_namespace_are_parsed_correctly()
     {
-        $expected_path = $this->dump_to.'/exclude-wp-cli-traits.php';
+        $expected_path = $this->dump_to.'/exclude-4e5576b-wp-cli-traits.php';
         
         $this->assertFalse(is_file($expected_path));
         
@@ -179,7 +179,7 @@ final class CustomNamespaceTest extends TestCase
      */
     public function files_can_be_dumped_as_json() :void
     {
-        $expected_path = $this->dump_to.'/exclude-wp-cli-functions.json';
+        $expected_path = $this->dump_to.'/exclude-4e5576b-wp-cli-functions.json';
         
         $this->assertFalse(is_file($expected_path));
         
