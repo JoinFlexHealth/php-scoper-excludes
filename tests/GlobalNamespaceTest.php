@@ -49,7 +49,7 @@ final class GlobalNamespaceTest extends TestCase
     /** @test */
     public function functions_in_the_custom_namespace_are_parsed_correctly()
     {
-        $expected_path = $this->dump_to.'/exclude-4e5576b-wordpress-functions.php';
+        $expected_path = $this->dump_to.'/exclude-wordpress-functions.php';
         
         $this->assertFalse(is_file($expected_path));
         
@@ -69,7 +69,7 @@ final class GlobalNamespaceTest extends TestCase
     /** @test */
     public function classes_in_the_global_namespace_are_parsed_correctly()
     {
-        $expected_path = $this->dump_to.'/exclude-4e5576b-wordpress-classes.php';
+        $expected_path = $this->dump_to.'/exclude-wordpress-classes.php';
         
         $this->assertFalse(is_file($expected_path));
         
@@ -89,7 +89,7 @@ final class GlobalNamespaceTest extends TestCase
     /** @test */
     public function interfaces_in_the_global_namespace_are_parsed_correctly()
     {
-        $expected_path = $this->dump_to.'/exclude-4e5576b-wordpress-interfaces.php';
+        $expected_path = $this->dump_to.'/exclude-wordpress-interfaces.php';
         
         $this->assertFalse(is_file($expected_path));
         
@@ -107,7 +107,7 @@ final class GlobalNamespaceTest extends TestCase
     /** @test */
     public function traits_in_the_global_namespace_are_parsed_correctly()
     {
-        $expected_path = $this->dump_to.'/exclude-4e5576b-wordpress-traits.php';
+        $expected_path = $this->dump_to.'/exclude-wordpress-traits.php';
         
         $this->assertFalse(is_file($expected_path));
         
@@ -126,7 +126,7 @@ final class GlobalNamespaceTest extends TestCase
     /** @test */
     public function constants_in_the_global_namespace_are_parsed_correctly()
     {
-        $expected_path = $this->dump_to.'/exclude-4e5576b-wordpress-constants.php';
+        $expected_path = $this->dump_to.'/exclude-wordpress-constants.php';
         
         $this->assertFalse(is_file($expected_path));
         
@@ -147,17 +147,17 @@ final class GlobalNamespaceTest extends TestCase
      */
     public function only_files_with_contents_can_be_dumped_as_php_array() :void
     {
-        $expected_path = $this->dump_to.'/exclude-4e5576b-classes-only-classes.php';
+        $expected_path = $this->dump_to.'/exclude-classes-only-classes.php';
     
         $this->assertFalse(is_file($expected_path));
     
         $this->dumper->dumpAsPhpArray($this->fixtures_dir.'/classes-only.php', false);
     
         $this->assertTrue(is_file($expected_path));
-        $this->assertFalse(is_file($this->dump_to.'/exclude-4e5576b-classes-only-traits.php'));
-        $this->assertFalse(is_file($this->dump_to.'/exclude-4e5576b-classes-only-constants.php'));
-        $this->assertFalse(is_file($this->dump_to.'/exclude-4e5576b-classes-only-functions.php'));
-        $this->assertFalse(is_file($this->dump_to.'/exclude-4e5576b-classes-only-interfaces.php'));
+        $this->assertFalse(is_file($this->dump_to.'/exclude-classes-only-traits.php'));
+        $this->assertFalse(is_file($this->dump_to.'/exclude-classes-only-constants.php'));
+        $this->assertFalse(is_file($this->dump_to.'/exclude-classes-only-functions.php'));
+        $this->assertFalse(is_file($this->dump_to.'/exclude-classes-only-interfaces.php'));
     
         $functions = require_once $expected_path;
     
@@ -173,17 +173,17 @@ final class GlobalNamespaceTest extends TestCase
      */
     public function only_files_with_contents_can_be_dumped_as_json_array() :void
     {
-        $expected_path = $this->dump_to.'/exclude-4e5576b-classes-only-classes.json';
+        $expected_path = $this->dump_to.'/exclude-classes-only-classes.json';
     
         $this->assertFalse(is_file($expected_path));
     
         $this->dumper->dumpAsJson($this->fixtures_dir.'/classes-only.php', false);
     
         $this->assertTrue(is_file($expected_path));
-        $this->assertFalse(is_file($this->dump_to.'/exclude-4e5576b-classes-only-traits.json'));
-        $this->assertFalse(is_file($this->dump_to.'/exclude-4e5576b-classes-only-constants.json'));
-        $this->assertFalse(is_file($this->dump_to.'/exclude-4e5576b-classes-only-functions.json'));
-        $this->assertFalse(is_file($this->dump_to.'/exclude-4e5576b-classes-only-interfaces.json'));
+        $this->assertFalse(is_file($this->dump_to.'/exclude-classes-only-traits.json'));
+        $this->assertFalse(is_file($this->dump_to.'/exclude-classes-only-constants.json'));
+        $this->assertFalse(is_file($this->dump_to.'/exclude-classes-only-functions.json'));
+        $this->assertFalse(is_file($this->dump_to.'/exclude-classes-only-interfaces.json'));
     
         $functions = json_decode(file_get_contents($expected_path));
     
